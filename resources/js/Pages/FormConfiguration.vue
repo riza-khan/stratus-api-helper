@@ -96,7 +96,7 @@ const saveConfiguration = async (val) => {
 
         configuration.value = data.data;
     } catch (e) {
-        console.log(e);
+        console.log(e.response);
     }
 };
 </script>

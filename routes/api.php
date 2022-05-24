@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\EmailTemplateController;
 use App\Http\Controllers\PfizerController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -17,23 +19,20 @@ use Illuminate\Http\Request;
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
-
-    Route::post('/save-pfizer-token', [PfizerController::class, 'token'])->name('save-pfizer-token');
+    Route::post('/save-pfizer-token', [PfizerController::class, 'token'])
+        ->name('save-pfizer-token');
 
     Route::prefix('configuration')->group(function () {
-        Route::get('/', [PfizerController::class, 'getConfiguration'])
+        Route::get('/', [ConfigurationController::class, 'getConfiguration'])
             ->name('get-configuration');
-        Route::put('/', [PfizerController::class, 'updateConfiguration'])
+        Route::put('/', [ConfigurationController::class, 'updateConfiguration'])
             ->name('update-configuration');
     });
 
     Route::prefix('email-template')->group(function () {
-        Route::get('/', [PfizerController::class, 'getEmailTemplate'])
+        Route::get('/', [EmailTemplateController::class, 'getEmailTemplate'])
             ->name('get-email-template');
-        Route::put('/', [PfizerController::class, 'updateEmailTemplate'])
+        Route::put('/', [EmailTemplateController::class, 'updateEmailTemplate'])
             ->name('update-email-template');
     });
 });
