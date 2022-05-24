@@ -17,7 +17,6 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 </script>

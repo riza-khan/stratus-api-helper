@@ -179,9 +179,12 @@
                     <slot name="header" />
                 </div>
             </header>
-            <div class="flex mx-auto w-full justify-center my-4">
-                <p :class="flash.success ? 'text-green' : 'text-red'">
-                    {{ flash.message }}
+            <div
+                class="flex mx-auto w-full justify-center my-4"
+                v-if="flash?.message"
+            >
+                <p :class="flash?.success ? 'text-green' : 'text-red'">
+                    {{ flash?.message }}
                 </p>
             </div>
 
