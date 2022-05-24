@@ -16,9 +16,10 @@ class PfizerController extends Controller
                     'pfizer_token' => ['required', 'string']
                 ])
             );
-            return response()->json(['success' => true]);
+
+            return response()->json(['success' => true, 'message' => 'Token Updated']);
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => $e]);
+            return response()->json(['success' => false, 'message' => "Error: $e"]);
         }
     }
 }

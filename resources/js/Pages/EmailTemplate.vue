@@ -1,7 +1,7 @@
 <template>
     <Head title="Email Template" />
 
-    <BreezeAuthenticatedLayout>
+    <BreezeAuthenticatedLayout :flash="flash">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Email Template
@@ -51,6 +51,7 @@ const form = ref({
     environment: "uat",
 });
 
+const flash = ref({ success: true, message: "" });
 const emailTemplate = ref({});
 
 const options = [
@@ -67,6 +68,11 @@ const options = [
         value: "production",
     },
 ];
+
+const resetFlash = () => {
+    flash.value.success = true;
+    flash.value.message = "";
+};
 
 const handleGetEmailTemplate = async () => {
     try {

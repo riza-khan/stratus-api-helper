@@ -15,9 +15,9 @@ class ConfigurationController extends Controller
                 $this->configurationUrl($request->environment, $request->configuration)
             )->json();
 
-            return response()->json(['data' => $response['data']['config']]);
+            return response()->json(['data' => $response['data']['config'], 'success' => true, 'message' => 'Config Retrieved']);
         } catch (Exception $e) {
-            return response()->json(['error' => $e]);
+            return response()->json(['success' => false, 'message' => "Server Error: $e"]);
         }
     }
 
@@ -30,12 +30,19 @@ class ConfigurationController extends Controller
             )->json();
 
             if ($response['success']) {
-                return response()->json(['data' => $response['data']['new']]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Config Updated',
+                    'data'    => $response['data']['new']
+                ]);
             } else {
-                return response()->json(['data' => $response]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Server Error'
+                ]);
             }
         } catch (Exception $e) {
-            return response()->json(['error' => $e]);
+            return response()->json(['success' => false, 'message' => "Server Error: $e"]);
         }
     }
 

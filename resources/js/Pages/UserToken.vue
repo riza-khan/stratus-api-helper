@@ -1,7 +1,7 @@
 <template>
     <Head title="User Token" />
 
-    <BreezeAuthenticatedLayout>
+    <BreezeAuthenticatedLayout :flash="flash">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 User Token
@@ -40,11 +40,16 @@ const form = ref({
     pfizer_token: "",
 });
 
+const flash = ref({ success: true, message: "" });
+
 const savePfizerToken = async () => {
     try {
-        await axios.post("/api/save-pfizer-token", form.value);
+        const { data } = await axios.post("/api/save-pfizer-token", form.value);
+
+        flash.value = { ...data };
     } catch (e) {
-        console.log(e);
+        console.log(e.response);
+        message.value = { ...e.response.data };
     }
 };
 </script>

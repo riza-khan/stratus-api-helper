@@ -1,7 +1,7 @@
 <template>
     <Head title="Form Configuration" />
 
-    <BreezeAuthenticatedLayout>
+    <BreezeAuthenticatedLayout :flash="flash">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Form Configuration
@@ -52,6 +52,8 @@ const form = ref({
     environment: "uat",
 });
 
+const flash = ref({ success: true, message: "" });
+
 const configuration = ref({});
 
 const options = [
@@ -69,7 +71,13 @@ const options = [
     },
 ];
 
+const resetFlash = () => {
+    flash.value.success = true;
+    flash.value.message = "";
+};
+
 const handleGetConfiguration = async () => {
+    resetFlash();
     try {
         const { data } = await axios.get("/api/configuration", {
             params: {
@@ -77,13 +85,21 @@ const handleGetConfiguration = async () => {
             },
         });
 
+        if (data.error) {
+            throw new Error("Server Error");
+        }
+
         configuration.value = data.data;
+        flash.value.success = data.success;
+        flash.value.message = data.message;
     } catch (e) {
-        console.log(e);
+        flash.value.success = false;
+        flash.value.message = e;
     }
 };
 
 const saveConfiguration = async (val) => {
+    resetFlash();
     try {
         const { data } = await axios.put("/api/configuration", {
             params: {
