@@ -17,9 +17,15 @@ class PfizerController extends Controller
                 ])
             );
 
-            return response()->json(['success' => true, 'message' => 'Token Updated']);
+            return response()->json([
+                'success' => true,
+                'message' => 'Token Updated'
+            ]);
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => "Error: $e"]);
+            return response()->json([
+                'success' => false,
+                'message' => "Error: $e"
+            ]);
         }
     }
 }

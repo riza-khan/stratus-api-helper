@@ -17,6 +17,9 @@
         "@vue/compiler-sfc": "^3.2.31",
         "autoprefixer": "^10.4.2",
         "axios": "^0.21",
+        "eslint": "^7.32.0",
+        "eslint-loader": "^4.0.2",
+        "eslint-plugin-vue": "^9.0.1",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
         "postcss": "^8.4.6",
@@ -26,6 +29,8 @@
         "vue-loader": "^17.0.0"
     },
     "dependencies": {
+        "eslint-config-prettier": "^8.5.0",
+        "prettier": "^2.6.2",
         "vue3-json-editor": "^1.1.5"
     }
 }
