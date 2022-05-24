@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,7 +79,7 @@ class PfizerController extends Controller
         }
     }
 
-    private function defaultHttp(string $config_token = 'foobar')
+    private function defaultHttp(string $config_token = 'foobar'): PendingRequest
     {
         $user = Auth::user();
 
@@ -91,12 +92,12 @@ class PfizerController extends Controller
         return Http::withHeaders($headers);
     }
 
-    private function configurationUrl(string $environment, string $configuration)
+    private function configurationUrl(string $environment, string $configuration): string
     {
         return "https://ms-config-manager-$environment.digitalpfizer.com/api/v1/configs/$configuration";
     }
 
-    private function emailUrl(string $environment, string $template = '')
+    private function emailUrl(string $environment, string $template = ''): string
     {
         return "https://ms-config-manager-$environment.digitalpfizer.com/api/v1/emails/templates/$template";
     }
