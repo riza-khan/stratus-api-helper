@@ -180,11 +180,11 @@
                 </div>
             </header>
             <div
-                class="flex mx-auto w-full justify-center my-4"
-                v-if="flash?.message"
+                class="flex mx-auto w-full justify-center mt-5"
+                v-if="props.flash?.message"
             >
-                <p :class="flash?.success ? 'text-green' : 'text-red'">
-                    {{ flash?.message }}
+                <p :class="props.flash?.success ? 'text-green' : 'text-red'">
+                    {{ props.flash?.message }}
                 </p>
             </div>
 
