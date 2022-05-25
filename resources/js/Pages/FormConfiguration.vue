@@ -79,7 +79,7 @@ const resetFlash = () => {
 const handleGetConfiguration = async () => {
     resetFlash();
     try {
-        const { data } = await axios.get("/api/configuration", {
+        const { data } = await window.axios.get("/api/configuration", {
             params: {
                 ...form.value,
             },
@@ -101,7 +101,7 @@ const handleGetConfiguration = async () => {
 const saveConfiguration = async (val) => {
     resetFlash();
     try {
-        const { data } = await axios.put("/api/configuration", {
+        const { data } = await window.axios.put("/api/configuration", {
             params: {
                 ...form.value,
             },
