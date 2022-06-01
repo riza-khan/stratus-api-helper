@@ -14,7 +14,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function defaultHttp(string $config_token = 'foobar'): PendingRequest
+    public function defaultHttp(string $config_token = ''): PendingRequest
     {
         $user = Auth::user();
 
