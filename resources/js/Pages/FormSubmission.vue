@@ -95,14 +95,14 @@ const getForm = async () => {
     }
 };
 
-const submitForm = async () => {
+const submitForm = async (val) => {
     try {
         const { data } = await window.axios.post("/api/form", {
             params: {
                 ...form.value,
             },
             body: {
-                ...formToSubmit.value,
+                ...val,
             },
         });
 
