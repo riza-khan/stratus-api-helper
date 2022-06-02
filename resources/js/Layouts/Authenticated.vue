@@ -40,6 +40,12 @@
                                     Form Configuration
                                 </BreezeNavLink>
                                 <BreezeNavLink
+                                    :href="route('form-submission')"
+                                    :active="route().current('form-submission')"
+                                >
+                                    Form Submission
+                                </BreezeNavLink>
+                                <BreezeNavLink
                                     :href="route('email-template')"
                                     :active="route().current('email-template')"
                                 >

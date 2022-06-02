@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\FormController;
 use App\Http\Controllers\EmailTemplateController;
 use App\Http\Controllers\PfizerController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,5 +34,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             ->name('get-email-template');
         Route::put('/', [EmailTemplateController::class, 'updateEmailTemplate'])
             ->name('update-email-template');
+    });
+
+    Route::prefix('form')->group(function () {
+        Route::get('/', [FormController::class, 'index'])
+            ->name('get-form');
+        Route::post('/', [FormController::class, 'submit'])
+            ->name('submit-form');
     });
 });

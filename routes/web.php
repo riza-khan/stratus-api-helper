@@ -37,6 +37,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         return Inertia::render('FormConfiguration');
     })->name('form-configuration');
 
+    Route::get('/form-submission', function () {
+        return Inertia::render('FormSubmission');
+    })->name('form-submission');
+
     Route::get('/email-template', function () {
         return Inertia::render('EmailTemplate');
     })->name('email-template');
