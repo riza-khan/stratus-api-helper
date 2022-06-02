@@ -110,7 +110,7 @@ const submitForm = async () => {
             throw new Error("Server Error");
         }
 
-        formToSubmit.value = data.data;
+        // formToSubmit.value = data.data;
         flash.value.success = data.success;
         flash.value.message = data.message;
     } catch (e) {
