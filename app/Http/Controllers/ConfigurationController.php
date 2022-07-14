@@ -23,7 +23,8 @@ class ConfigurationController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => "Server Error: $e"
+                'message' => "Server Error: Refresh token",
+                'error'   => "$e"
             ]);
         }
     }
@@ -44,12 +45,17 @@ class ConfigurationController extends Controller
                 ]);
             } else {
                 return response()->json([
-                    'success' => false,
-                    'message' => 'Server Error'
+                    'success'  => false,
+                    'message'  => "Unable to update config",
+                    'error'    => $response
                 ]);
             }
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => "Server Error: $e"]);
+            return response()->json([
+                'success' => false, 
+                'message' => "Server Error: Unable to update config",
+                'error'   => "$e"
+            ]);
         }
     }
 

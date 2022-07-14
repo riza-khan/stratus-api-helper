@@ -24,7 +24,7 @@
                     />
                     <Button>Get Configuration</Button>
                 </form>
-                <div class="py-5" style="height: 1000px">
+                <div class="py-5">
                     <Vue3JsonEditor
                         v-model="configuration"
                         :show-btns="true"
@@ -52,7 +52,7 @@ const form = ref({
     environment: "uat",
 });
 
-const flash = ref({ success: true, message: "" });
+const flash = ref({ success: true, message: "", error: "" });
 
 const configuration = ref({});
 
@@ -74,6 +74,7 @@ const options = [
 const resetFlash = () => {
     flash.value.success = true;
     flash.value.message = "";
+    flash.value.error = "";
 };
 
 const handleGetConfiguration = async () => {
@@ -85,13 +86,17 @@ const handleGetConfiguration = async () => {
             },
         });
 
-        if (data.error) {
-            throw new Error("Server Error");
-        }
+        const { success, message, error } = data;
 
-        configuration.value = data.data;
-        flash.value.success = data.success;
-        flash.value.message = data.message;
+        if (success) {
+            configuration.value = data.data;
+            flash.value.success = success;
+            flash.value.message = message;
+        } else {
+            flash.value.success = success;
+            flash.value.message = message;
+            flash.value.error = error;
+        }
     } catch (e) {
         flash.value.success = false;
         flash.value.message = e;
@@ -110,7 +115,15 @@ const saveConfiguration = async (val) => {
             },
         });
 
-        configuration.value = data.data;
+        const { success, message, error } = data;
+
+        if (success) {
+            configuration.value = data.data;
+        } else {
+            flash.value.success = false;
+            flash.value.message = message;
+            flash.value.error = error;
+        }
     } catch (e) {
         console.log(e.response);
     }

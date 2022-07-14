@@ -40,8 +40,8 @@ class FormController extends Controller
     {
         try {
             $config_token = $request['params']['form'];
-            $environment = $request['params']['environment'];
-            $form        = $request['body'];
+            $environment  = $request['params']['environment'];
+            $form         = $request['body'];
 
             $response = $this->defaultHttp($config_token)->post(
                 $this->formUrl($environment),

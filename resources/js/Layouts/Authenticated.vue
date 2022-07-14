@@ -180,24 +180,29 @@
             </nav>
 
             <!-- Page Heading -->
+
             <header class="bg-white shadow" v-if="$slots.header">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>
             </header>
+
             <div
                 class="flex mx-auto w-full justify-center mt-5"
                 v-if="props.flash?.message"
             >
                 <p :class="props.flash?.success ? 'text-green' : 'text-red'">
-                    {{ props.flash?.message }}
+                    {{ props.flash.message }}
                 </p>
             </div>
 
-            <!-- Page Content -->
             <main>
                 <slot />
             </main>
+
+            <div v-if="props.flash?.message" class="w-100 px-4">
+                <pre class="overflow-auto">{{ props.flash.error }}</pre>
+            </div>
         </div>
     </div>
 </template>
