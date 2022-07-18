@@ -18,12 +18,18 @@ class ConfigurationController extends Controller
             return response()->json([
                 'data'    => $response['data']['config'],
                 'success' => true,
-                'message' => 'Config Retrieved'
+                'alert' => [
+                    'type'  => 'success',
+                    'title' => 'Configuration retrieved!'
+                ]
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => "Server Error: Refresh token",
+                'alert' => [
+                    'type'  => 'error',
+                    'title' => 'Error while retrieving configuration'
+                ],
                 'error'   => "$e"
             ]);
         }
@@ -39,22 +45,31 @@ class ConfigurationController extends Controller
 
             if ($response['success']) {
                 return response()->json([
-                    'success' => true,
-                    'message' => 'Config Updated',
-                    'data'    => $response['data']['new']
+                    'success'   => true,
+                    'alert'     => [
+                        'type'  => 'success',
+                        'title' => 'Configuration updated!'
+                    ],
+                    'data'      => $response['data']['new']
                 ]);
             } else {
                 return response()->json([
-                    'success'  => false,
-                    'message'  => "Unable to update config",
-                    'error'    => $response
+                    'success'   => false,
+                    'alert'     => [
+                        'type'  => 'error',
+                        'title' => 'Unable to configuration updated!'
+                    ],
+                    'error'     => $response
                 ]);
             }
         } catch (Exception $e) {
             return response()->json([
-                'success' => false, 
-                'message' => "Server Error: Unable to update config",
-                'error'   => "$e"
+                'success'   => false,
+                'alert'     => [
+                    'type'  => 'error',
+                    'title' => 'Server error!'
+                ],
+                'error'     => "$e"
             ]);
         }
     }

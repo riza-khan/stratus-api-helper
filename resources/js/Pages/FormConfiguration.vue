@@ -1,7 +1,7 @@
 <template>
     <Head title="Form Configuration" />
 
-    <BreezeAuthenticatedLayout :flash="flash">
+    <BreezeAuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Form Configuration
@@ -40,6 +40,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { useAlertStore } from "../Store/alert.js";
 import { Vue3JsonEditor } from "vue3-json-editor";
 import { Head } from "@inertiajs/inertia-vue3";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
@@ -47,15 +48,13 @@ import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import Select from "@/Components/Select.vue";
 
+const alertStore = useAlertStore();
 const form = ref({
     configuration: "",
     environment: "uat",
 });
 
-const flash = ref({ success: true, message: "", error: "" });
-
 const configuration = ref({});
-
 const options = [
     {
         text: "Staging",
@@ -71,14 +70,7 @@ const options = [
     },
 ];
 
-const resetFlash = () => {
-    flash.value.success = true;
-    flash.value.message = "";
-    flash.value.error = "";
-};
-
 const handleGetConfiguration = async () => {
-    resetFlash();
     try {
         const { data } = await window.axios.get("/api/configuration", {
             params: {
@@ -86,25 +78,20 @@ const handleGetConfiguration = async () => {
             },
         });
 
-        const { success, message, error } = data;
+        const { success, alert } = data;
 
         if (success) {
             configuration.value = data.data;
-            flash.value.success = success;
-            flash.value.message = message;
+            alertStore.addAlert(alert);
         } else {
-            flash.value.success = success;
-            flash.value.message = message;
-            flash.value.error = error;
+            alertStore.addAlert(alert);
         }
     } catch (e) {
-        flash.value.success = false;
-        flash.value.message = e;
+        console.log(e);
     }
 };
 
 const saveConfiguration = async (val) => {
-    resetFlash();
     try {
         const { data } = await window.axios.put("/api/configuration", {
             params: {
@@ -115,14 +102,13 @@ const saveConfiguration = async (val) => {
             },
         });
 
-        const { success, message, error } = data;
+        const { success, alert } = data;
 
         if (success) {
             configuration.value = data.data;
+            alertStore.addAlert(alert);
         } else {
-            flash.value.success = false;
-            flash.value.message = message;
-            flash.value.error = error;
+            alertStore.addAlert(alert);
         }
     } catch (e) {
         console.log(e.response);

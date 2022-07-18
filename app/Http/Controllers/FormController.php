@@ -30,13 +30,11 @@ class FormController extends Controller
                 return response()->json([
                     'form'    => $this->flatten_array(['csrfToken' => $obj['csrfToken'], $fields]),
                     'success' => true,
-                    'message' => 'Form Retrieved'
                 ]);
             } else {
                 return response()->json([
                     'form'    => '[]',
                     'success' => false,
-                    'message' => 'Form could not be found'
                 ]);
             }
         } catch (Exception $e) {

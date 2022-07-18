@@ -27,6 +27,10 @@ class PfizerController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
+                'alert'   => [
+                    'type'  => 'error',
+                    'title' => 'Token could not be savedd!'
+                ],
                 'message' => "Error: $e"
             ]);
         }
