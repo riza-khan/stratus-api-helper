@@ -1,7 +1,7 @@
 <template>
     <div
         v-if="show"
-        class="absolute top-12 right-3 border px-2 py-3 rounded flex"
+        class="fixed top-12 right-3 border px-2 py-3 rounded flex"
         :class="type?.wrapper"
         role="alert"
     >

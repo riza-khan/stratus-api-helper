@@ -8,8 +8,8 @@
             </h2>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="py-12 flex">
+            <div class="w-2/3 sm:px-6 lg:px-8">
                 <form
                     @submit.prevent="handleGetConfiguration"
                     class="flex gap-1 mb-2"
@@ -34,13 +34,35 @@
                     />
                 </div>
             </div>
+            <div class="w-1/3 flex flex-col px-2">
+                <p class="h4 mx-auto font-bold">
+                    Recently viewed configurations
+                </p>
+                <div
+                    class="flex flex-col gap-1 mt-3"
+                    v-for="({ environment, configs }, $environment) in history"
+                    :key="$environment"
+                >
+                    <p class="text-center text-stone-500">{{ environment }}</p>
+                    <button
+                        v-for="(config, $config) in configs"
+                        :key="$config"
+                        @click="fetchItemFromHistory(environment, config)"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                    >
+                        {{ config }}
+                    </button>
+                </div>
+            </div>
         </div>
     </BreezeAuthenticatedLayout>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed } from "vue";
+import { storeToRefs } from "pinia";
 import { useAlertStore } from "../Store/alert.js";
+import { useConfigStore } from "../Store/config.js";
 import { Vue3JsonEditor } from "vue3-json-editor";
 import { Head } from "@inertiajs/inertia-vue3";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
@@ -48,13 +70,22 @@ import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import Select from "@/Components/Select.vue";
 
+const configStore = useConfigStore();
+const { configurations, history, form, loading } = storeToRefs(configStore);
+
 const alertStore = useAlertStore();
-const form = ref({
-    configuration: "",
-    environment: "uat",
+
+const configuration = computed({
+    get: () =>
+        configurations.value?.[form.value.environment]?.[
+            form.value.configuration
+        ] ?? {},
+    set: (val) => {
+        configurations.value[form.value.environemtn][form.value.configuration] =
+            val;
+    },
 });
 
-const configuration = ref({});
 const options = [
     {
         text: "Staging",
@@ -72,6 +103,7 @@ const options = [
 
 const handleGetConfiguration = async () => {
     try {
+        loading.value = true;
         const { data } = await window.axios.get("/api/configuration", {
             params: {
                 ...form.value,
@@ -81,18 +113,31 @@ const handleGetConfiguration = async () => {
         const { success, alert } = data;
 
         if (success) {
-            configuration.value = data.data;
+            if (
+                !Object.prototype.hasOwnProperty.call(
+                    configurations.value,
+                    form.value.environment
+                )
+            ) {
+                configurations.value[form.value.environment] = {};
+            }
+            configurations.value[form.value.environment][
+                form.value.configuration
+            ] = { ...data.data };
             alertStore.addAlert(alert);
         } else {
             alertStore.addAlert(alert);
         }
     } catch (e) {
         console.log(e);
+    } finally {
+        loading.value = false;
     }
 };
 
 const saveConfiguration = async (val) => {
     try {
+        loading.value = true;
         const { data } = await window.axios.put("/api/configuration", {
             params: {
                 ...form.value,
@@ -105,13 +150,22 @@ const saveConfiguration = async (val) => {
         const { success, alert } = data;
 
         if (success) {
-            configuration.value = data.data;
+            configurations.value[form.value.environment][
+                form.value.configuration
+            ] = data.data;
             alertStore.addAlert(alert);
         } else {
             alertStore.addAlert(alert);
         }
     } catch (e) {
         console.log(e.response);
+    } finally {
+        loading.value = false;
     }
+};
+
+const fetchItemFromHistory = (environment, config) => {
+    form.value.environment = environment;
+    form.value.configuration = config;
 };
 </script>
