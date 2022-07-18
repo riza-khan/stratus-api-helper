@@ -30,13 +30,14 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref, watch, computed } from "vue";
 import { useAlertStore } from "@/Store/alert.js";
 import { storeToRefs } from "pinia";
 
 const alertStore = useAlertStore();
 const { alerts, firstAlert } = storeToRefs(alertStore);
 
+const timer = ref(null);
 const show = computed(() => !!alerts.value.length);
 const type = computed(() => {
     const types = {
@@ -56,4 +57,17 @@ const type = computed(() => {
 
     return types[firstAlert?.value?.type] ?? false;
 });
+
+watch(
+    () => alerts.value.length,
+    (val) => {
+        if (val) {
+            clearTimeout(timer.value);
+            timer.value = setTimeout(() => alertStore.removeFirstAlert(), 3000);
+        } else {
+            clearTimeout(timer.value);
+        }
+    },
+    { immediate: true }
+);
 </script>

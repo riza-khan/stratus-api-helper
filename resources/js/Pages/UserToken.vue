@@ -31,12 +31,14 @@
 <script setup>
 import { ref, defineProps, onMounted } from "vue";
 import { useAuthStore } from "../Store/auth.js";
+import { useAlertStore } from "../Store/alert.js";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 
 const authStore = useAuthStore();
+const alertStore = useAlertStore();
 
 const form = ref({
     pfizer_token: "",
@@ -51,11 +53,17 @@ const props = defineProps({
 
 const savePfizerToken = async () => {
     try {
-        const { data } = await window.axios.post("/api/save-pfizer-token", form.value);
+        const { data } = await window.axios.post(
+            "/api/save-pfizer-token",
+            form.value
+        );
+
+        const { alert } = data;
+        alertStore.addAlert(alert);
     } catch (e) {
         console.log(e.response);
     }
 };
 
-onMounted(() => authStore.setUser(props.user))
+onMounted(() => authStore.setUser(props.user));
 </script>
