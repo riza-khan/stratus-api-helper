@@ -45,8 +45,8 @@ import Input from "@/Components/Input.vue";
 import Select from "@/Components/Select.vue";
 
 const form = ref({
-    form: "form_builder__production__115__wd",
-    environment: "production",
+    form: "",
+    environment: "uat",
 });
 
 const flash = ref({ success: true, message: "" });
@@ -82,13 +82,17 @@ const getForm = async () => {
             },
         });
 
-        if (data.error) {
-            throw new Error("Server Error");
-        }
+        const { success, message, error } = data;
 
-        formToSubmit.value = data.data;
-        flash.value.success = data.success;
-        flash.value.message = data.message;
+        if (success) {
+            formToSubmit.value = data.form;
+            flash.value.success = success;
+            flash.value.message = message;
+        } else {
+            flash.value.success = success;
+            flash.value.message = message;
+            flash.value.error = error;
+        }
     } catch (e) {
         flash.value.success = false;
         flash.value.message = e;
@@ -96,6 +100,7 @@ const getForm = async () => {
 };
 
 const submitForm = async (val) => {
+    if (!Object.keys(val).length) return;
     try {
         const { data } = await window.axios.post("/api/form", {
             params: {
@@ -106,13 +111,18 @@ const submitForm = async (val) => {
             },
         });
 
-        if (data.error) {
-            throw new Error("Server Error");
+        const { success, message, error } = data;
+
+        if (success) {
+            flash.value.success = success;
+            flash.value.message = message;
+        } else {
+            flash.value.success = success;
+            flash.value.message = message;
+            flash.value.error = error;
         }
 
         // formToSubmit.value = data.data;
-        flash.value.success = data.success;
-        flash.value.message = data.message;
     } catch (e) {
         flash.value.success = false;
         flash.value.message = e;

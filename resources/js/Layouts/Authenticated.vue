@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-gray-100 relative">
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -8,7 +8,7 @@
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('user-token')">
                                     <BreezeApplicationLogo
                                         class="block h-9 w-auto"
                                     />
@@ -19,12 +19,6 @@
                             <div
                                 class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
                             >
-                                <BreezeNavLink
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
-                                >
-                                    Dashboard
-                                </BreezeNavLink>
                                 <BreezeNavLink
                                     :href="route('user-token')"
                                     :active="route().current('user-token')"
@@ -148,10 +142,10 @@
                 >
                     <div class="pt-2 pb-3 space-y-1">
                         <BreezeResponsiveNavLink
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
+                            :href="route('user-token')"
+                            :active="route().current('user-token')"
                         >
-                            Dashboard
+                            UserToken
                         </BreezeResponsiveNavLink>
                     </div>
 
@@ -187,41 +181,23 @@
                 </div>
             </header>
 
-            <div
-                class="flex mx-auto w-full justify-center mt-5"
-                v-if="props.flash?.message"
-            >
-                <p :class="props.flash?.success ? 'text-green' : 'text-red'">
-                    {{ props.flash.message }}
-                </p>
-            </div>
-
             <main>
                 <slot />
             </main>
-
-            <div v-if="props.flash?.message" class="w-100 px-4">
-                <pre class="overflow-auto">{{ props.flash.error }}</pre>
-            </div>
         </div>
+        <Alerts/>
     </div>
 </template>
 
 <script setup>
-import { ref, defineProps } from "vue";
+import { ref } from "vue";
 import BreezeApplicationLogo from "@/Components/ApplicationLogo.vue";
 import BreezeDropdown from "@/Components/Dropdown.vue";
 import BreezeDropdownLink from "@/Components/DropdownLink.vue";
 import BreezeNavLink from "@/Components/NavLink.vue";
 import BreezeResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import Alerts from "@/Components/Alerts.vue";
 import { Link } from "@inertiajs/inertia-vue3";
-
-const props = defineProps({
-    flash: {
-        type: Object,
-        default: () => {},
-    },
-});
 
 const showingNavigationDropdown = ref(false);
 </script>

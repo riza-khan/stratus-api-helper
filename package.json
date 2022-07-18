@@ -30,6 +30,7 @@
     },
     "dependencies": {
         "eslint-config-prettier": "^8.5.0",
+        "pinia": "^2.0.16",
         "prettier": "^2.6.2",
         "vue3-json-editor": "^1.1.5"
     }

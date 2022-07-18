@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -25,12 +27,12 @@ Route::get('/', function () {
 });
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-
     Route::get('/user-token', function () {
-        return Inertia::render('UserToken');
+        $user = Auth::user();
+
+        return Inertia::render('UserToken',[
+            'user' => $user
+        ]);
     })->name('user-token');
 
     Route::get('/form-configuration', function () {

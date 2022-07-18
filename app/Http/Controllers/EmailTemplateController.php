@@ -12,7 +12,7 @@ class EmailTemplateController extends Controller
     {
         try {
             $response = $this->defaultHttp()->get(
-                $this->emailUrl($request->environment, $request->name)
+                $this->emailUrl('production', $request->name)
             )->json();
 
             return response()->json(['data' => $response['data']]);
@@ -25,11 +25,15 @@ class EmailTemplateController extends Controller
     {
         try {
             $response = $this->defaultHttp()->put(
-                $this->emailUrl($request['params']['environment']),
+                'production',
                 $request['body']
             )->json();
 
-            return response()->json(['data' => $response['data']]);
+            return response()->json([
+                'data'    => $response['data'],
+                'success' => true,
+                'message' => 'Email Update'
+            ]);
         } catch (Exception $e) {
             return response()->json(['error' => $e]);
         }

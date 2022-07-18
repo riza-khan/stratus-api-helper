@@ -10,10 +10,10 @@
         >
             <Link
                 v-if="$page.props.auth.user"
-                :href="route('dashboard')"
+                :href="route('user-token')"
                 class="text-sm text-gray-700 underline"
             >
-                Dashboard
+                Login
             </Link>
 
             <template v-else>

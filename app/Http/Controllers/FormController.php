@@ -19,20 +19,32 @@ class FormController extends Controller
                 $this->formUrl($environment)
             )->json();
 
-            $obj = $response['data'];
-            $fields = array_map(function ($field) {
-                if ($field['name'] !== 'submit') {
-                    return [$field['name'] => 'change-me'];
-                }
-            }, $obj['fields']);
+            if (count($response['data'])) {
+                $obj = $response['data'];
+                $fields = array_map(function ($field) {
+                    if ($field['name'] !== 'submit') {
+                        return [$field['name'] => 'change-me'];
+                    }
+                }, $obj['fields']);
 
-            return response()->json([
-                'data'    => $this->flatten_array(['csrfToken' => $obj['csrfToken'], $fields]),
-                'success' => true,
-                'message' => 'Form Retrieved'
-            ]);
+                return response()->json([
+                    'form'    => $this->flatten_array(['csrfToken' => $obj['csrfToken'], $fields]),
+                    'success' => true,
+                    'message' => 'Form Retrieved'
+                ]);
+            } else {
+                return response()->json([
+                    'form'    => '[]',
+                    'success' => false,
+                    'message' => 'Form could not be found'
+                ]);
+            }
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => "Server Error: $e"]);
+            return response()->json([
+                'success' => false, 
+                'message' => "Server Error: Refresh Token",
+                'error'   => "$e"
+            ]);
         }
     }
 

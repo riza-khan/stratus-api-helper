@@ -14,7 +14,6 @@
                     @submit.prevent="handleGetEmailTemplate"
                     class="flex gap-1 mb-2"
                 >
-                    <Select v-model="form.environment" :options="options" />
                     <Input
                         id="configuration"
                         type="string"
@@ -44,7 +43,6 @@ import { Head } from "@inertiajs/inertia-vue3";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
-import Select from "@/Components/Select.vue";
 
 const form = ref({
     name: "",
@@ -54,29 +52,15 @@ const form = ref({
 const flash = ref({ success: true, message: "" });
 const emailTemplate = ref({});
 
-const options = [
-    {
-        text: "Staging",
-        value: "staging",
-    },
-    {
-        text: "UAT",
-        value: "uat",
-    },
-    {
-        text: "Production",
-        value: "production",
-    },
-];
-
 const resetFlash = () => {
     flash.value.success = true;
     flash.value.message = "";
 };
 
 const handleGetEmailTemplate = async () => {
+    resetFlash();
     try {
-        const { data } = await axios.get("/api/email-template", {
+        const { data } = await window.axios.get("/api/email-template", {
             params: {
                 ...form.value,
             },
@@ -89,8 +73,9 @@ const handleGetEmailTemplate = async () => {
 };
 
 const updateEmailTemplate = async (val) => {
+    resetFlash();
     try {
-        const { data } = await axios.put("/api/email-template", {
+        const { data } = await window.axios.put("/api/email-template", {
             params: {
                 ...form.value,
             },
@@ -101,7 +86,19 @@ const updateEmailTemplate = async (val) => {
                 html: val.HtmlPart,
             },
         });
-        console.log("updated");
+
+        const { success, message, error } = data;
+
+        if (success) {
+            flash.value.success = success;
+            flash.value.message = message;
+        } else {
+            flash.value.success = success;
+            flash.value.message = message;
+            flash.value.error = error;
+        }
+
+        console.log("updated", data);
     } catch (e) {
         console.log(e);
     }

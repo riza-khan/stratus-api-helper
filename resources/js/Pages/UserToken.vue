@@ -29,27 +29,34 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, defineProps, onMounted } from "vue";
+import { useAuthStore } from "../Store/auth.js";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import { Head } from "@inertiajs/inertia-vue3";
-import { Vue3JsonEditor } from "vue3-json-editor";
+
+const authStore = useAuthStore();
 
 const form = ref({
     pfizer_token: "",
 });
 
-const flash = ref({ success: true, message: "" });
+const props = defineProps({
+    user: {
+        type: Object,
+        default: () => ({}),
+    },
+});
 
 const savePfizerToken = async () => {
     try {
-        const { data } = await axios.post("/api/save-pfizer-token", form.value);
-
-        flash.value = { ...data };
+        const { data } = await window.axios.post("/api/save-pfizer-token", form.value);
+        console.log(data)
     } catch (e) {
         console.log(e.response);
-        message.value = { ...e.response.data };
     }
 };
+
+onMounted(() => authStore.setUser(props.user))
 </script>
