@@ -30,5 +30,16 @@ export const useAlertStore = defineStore("alert", {
     getters: {
         firstAlert: (state) => state.alerts[0],
     },
-    actions: {},
+    actions: {
+        removeFirstAlert() {
+            this.alerts.shift();
+        },
+        addARandomAlert() {
+            this.alerts.push({
+                type: "error",
+                title: "fooobar",
+                message: "grrrrrrrrr",
+            });
+        },
+    },
 });

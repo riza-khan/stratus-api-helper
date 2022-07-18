@@ -52,7 +52,6 @@ const props = defineProps({
 const savePfizerToken = async () => {
     try {
         const { data } = await window.axios.post("/api/save-pfizer-token", form.value);
-        console.log(data)
     } catch (e) {
         console.log(e.response);
     }

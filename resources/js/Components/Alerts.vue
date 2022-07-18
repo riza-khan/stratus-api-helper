@@ -2,20 +2,20 @@
     <div
         v-if="show"
         class="absolute top-12 right-3 border px-2 py-3 rounded flex"
-        :class="type.wrapper"
+        :class="type?.wrapper"
         role="alert"
     >
         <div class="my-auto">
-            <strong class="font-bold mr-1">{{ firstAlert.title }}</strong>
+            <strong class="font-bold mr-1">{{ firstAlert?.title }}</strong>
             <p class="max-w-sm">
-                {{ firstAlert.message }}
+                {{ firstAlert?.message }}
             </p>
         </div>
         <span class="px-2 py-3">
             <svg
-                @click="show = !show"
+                @click="alertStore.removeFirstAlert()"
                 class="fill-current h-6 w-6"
-                :class="type.close"
+                :class="type?.close"
                 role="button"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
@@ -30,15 +30,14 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { computed } from "vue";
 import { useAlertStore } from "@/Store/alert.js";
 import { storeToRefs } from "pinia";
 
-const show = ref(true);
 const alertStore = useAlertStore();
+const { alerts, firstAlert } = storeToRefs(alertStore);
 
-const { firstAlert } = storeToRefs(alertStore);
-
+const show = computed(() => !!alerts.value.length);
 const type = computed(() => {
     const types = {
         error: {
@@ -55,13 +54,6 @@ const type = computed(() => {
         },
     };
 
-    return types[firstAlert.value.type];
+    return types[firstAlert?.value?.type] ?? false;
 });
-
-watch(
-    () => show.value,
-    (val) => {
-        console.log(val);
-    }
-);
 </script>
