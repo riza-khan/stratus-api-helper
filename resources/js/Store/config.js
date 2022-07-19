@@ -8,12 +8,13 @@ export const useConfigStore = defineStore("config", {
                 configuration: "",
                 environment: "uat",
             },
-            email_templates: [],
-            loading: false
+            email_templates: {},
+            email_template: "",
+            loading: false,
         };
     },
     getters: {
-        history: (state) => {
+        configurations_history: (state) => {
             return Object.keys(state.configurations).map((environment) => ({
                 environment,
                 configs: Object.keys(state.configurations[environment]).map(
@@ -21,6 +22,7 @@ export const useConfigStore = defineStore("config", {
                 ),
             }));
         },
+        email_templates_history: (state) => Object.keys(state.email_templates),
     },
     actions: {},
 });

@@ -40,7 +40,9 @@
                 </p>
                 <div
                     class="flex flex-col gap-1 mt-3"
-                    v-for="({ environment, configs }, $environment) in history"
+                    v-for="(
+                        { environment, configs }, $environment
+                    ) in configurations_history"
                     :key="$environment"
                 >
                     <p class="text-center text-stone-500">{{ environment }}</p>
@@ -71,7 +73,8 @@ import Input from "@/Components/Input.vue";
 import Select from "@/Components/Select.vue";
 
 const configStore = useConfigStore();
-const { configurations, history, form, loading } = storeToRefs(configStore);
+const { configurations, configurations_history, form, loading } =
+    storeToRefs(configStore);
 
 const alertStore = useAlertStore();
 

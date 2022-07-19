@@ -15,7 +15,14 @@ class EmailTemplateController extends Controller
                 $this->emailUrl('production', $request->name)
             )->json();
 
-            return response()->json(['data' => $response['data']]);
+            return response()->json([
+                'success' => true,
+                'data' => $response['data'],
+                'alert' => [
+                    'type'  => 'success',
+                    'title' => "Email template retrieved!"
+                ]
+            ]);
         } catch (Exception $e) {
             return response()->json(['error' => $e]);
         }
@@ -25,21 +32,31 @@ class EmailTemplateController extends Controller
     {
         try {
             $response = $this->defaultHttp()->put(
-                'production',
+                $this->emailUrl('production'),
                 $request['body']
             )->json();
 
             return response()->json([
                 'data'    => $response['data'],
                 'success' => true,
-                'message' => 'Email Update'
+                'alert' => [
+                    'type'  => 'success',
+                    'title' => "Email template updated!"
+                ]
             ]);
         } catch (Exception $e) {
-            return response()->json(['error' => $e]);
+            return response()->json([
+                'success' => false,
+                'alert' => [
+                    'type'  => 'error',
+                    'title' => "Server Error!"
+                ],
+                'error' => "$e"
+            ]);
         }
     }
 
-    private function emailUrl(string $environment, string $template = ''): string
+    private function emailUrl(string $environment = 'production', string $template = ''): string
     {
         return "https://ms-config-manager-$environment.digitalpfizer.com/api/v1/emails/templates/$template";
     }

@@ -1,15 +1,15 @@
 <template>
     <Head title="Email Template" />
 
-    <BreezeAuthenticatedLayout :flash="flash">
+    <BreezeAuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Email Template
             </h2>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="py-12 flex">
+            <div class="w-2/3 sm:px-6 lg:px-8">
                 <form
                     @submit.prevent="handleGetEmailTemplate"
                     class="flex gap-1 mb-2"
@@ -19,17 +19,32 @@
                         type="string"
                         required
                         class="px-2 mt-1 block w-full"
-                        v-model="form.name"
+                        v-model="email_template"
                     />
                     <Button>Get Email Template</Button>
                 </form>
                 <div class="py-5">
                     <Vue3JsonEditor
-                        v-model="emailTemplate"
+                        v-model="email_templates[email_template]"
                         :show-btns="true"
                         mode="code"
                         @json-save="updateEmailTemplate"
                     />
+                </div>
+            </div>
+            <div class="w-1/3 flex flex-col px-2">
+                <p class="h4 mx-auto font-bold">
+                    Recently viewed email templates
+                </p>
+                <div class="flex flex-col gap-1 mt-3">
+                    <button
+                        v-for="(template, $template) in email_templates_history"
+                        :key="$template"
+                        @click="email_template = template"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                    >
+                        {{ template }}
+                    </button>
                 </div>
             </div>
         </div>
@@ -37,47 +52,45 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useConfigStore } from "@/Store/config";
+import { useAlertStore } from "@/Store/alert.js";
 import { Vue3JsonEditor } from "vue3-json-editor";
 import { Head } from "@inertiajs/inertia-vue3";
 import BreezeAuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 
-const form = ref({
-    name: "",
-    environment: "uat",
-});
+const alertStore = useAlertStore();
 
-const flash = ref({ success: true, message: "" });
-const emailTemplate = ref({});
-
-const resetFlash = () => {
-    flash.value.success = true;
-    flash.value.message = "";
-};
+const configStore = useConfigStore();
+const { email_template, email_templates, email_templates_history, loading } =
+    storeToRefs(configStore);
 
 const handleGetEmailTemplate = async () => {
-    resetFlash();
     try {
+        loading.value = true;
         const { data } = await window.axios.get("/api/email-template", {
             params: {
-                ...form.value,
+                name: email_template.value,
             },
         });
 
-        emailTemplate.value = data.data;
+        email_templates.value[email_template.value] = { ...data.data };
     } catch (e) {
         console.log(e);
+    } finally {
+        loading.value = false;
     }
 };
 
 const updateEmailTemplate = async (val) => {
-    resetFlash();
+    console.log("val", val);
     try {
+        loading.value = true;
         const { data } = await window.axios.put("/api/email-template", {
             params: {
-                ...form.value,
+                name: email_template.value,
             },
             body: {
                 name: val.TemplateName,
@@ -87,20 +100,18 @@ const updateEmailTemplate = async (val) => {
             },
         });
 
-        const { success, message, error } = data;
+        const { alert, success } = data;
 
         if (success) {
-            flash.value.success = success;
-            flash.value.message = message;
+            email_templates.value[email_template.value] = { ...val };
+            alertStore.addAlert(alert);
         } else {
-            flash.value.success = success;
-            flash.value.message = message;
-            flash.value.error = error;
+            alertStore.addAlert(alert);
         }
-
-        console.log("updated", data);
     } catch (e) {
         console.log(e);
+    } finally {
+        loading.value = false;
     }
 };
 </script>
