@@ -8,6 +8,11 @@ export const useConfigStore = defineStore("config", {
                 configuration: "",
                 environment: "uat",
             },
+            submissions:{},
+            submission: {
+                configuration: "",
+                environment: "uat",
+            },
             email_templates: {},
             email_template: "",
             loading: false,
@@ -23,6 +28,14 @@ export const useConfigStore = defineStore("config", {
             }));
         },
         email_templates_history: (state) => Object.keys(state.email_templates),
+        submissions_history: (state) => {
+            return Object.keys(state.submissions).map((environment) => ({
+                environment,
+                configs: Object.keys(state.submissions[environment]).map(
+                    (config) => config
+                ),
+            }));
+        },
     },
     actions: {},
 });

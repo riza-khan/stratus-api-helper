@@ -12,7 +12,7 @@ class FormController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $form        = $request->form;
+            $form        = $request->configuration;
             $environment = $request->environment;
 
             $response = $this->defaultHttp($form)->get(
@@ -20,7 +20,7 @@ class FormController extends Controller
             )->json();
 
             if (count($response['data'])) {
-                $obj = $response['data'];
+                $obj    = $response['data'];
                 $fields = array_map(function ($field) {
                     if ($field['name'] !== 'submit') {
                         return [$field['name'] => 'change-me'];
@@ -30,17 +30,28 @@ class FormController extends Controller
                 return response()->json([
                     'form'    => $this->flatten_array(['csrfToken' => $obj['csrfToken'], $fields]),
                     'success' => true,
+                    'alert'   => [
+                        'type'  => 'success',
+                        'title' => 'Form retrived successfully'
+                    ]
                 ]);
             } else {
                 return response()->json([
                     'form'    => '[]',
                     'success' => false,
+                    'alert'   => [
+                        'type'  => 'error',
+                        'title' => 'Failed to retrieve form'
+                    ]
                 ]);
             }
         } catch (Exception $e) {
             return response()->json([
-                'success' => false, 
-                'message' => "Server Error: Refresh Token",
+                'success' => false,
+                'alert'   => [
+                    'type'  => 'error',
+                    'title' => 'Server Error'
+                ],
                 'error'   => "$e"
             ]);
         }
@@ -49,7 +60,7 @@ class FormController extends Controller
     public function submit(Request $request): JsonResponse
     {
         try {
-            $config_token = $request['params']['form'];
+            $config_token = $request['params']['configuration'];
             $environment  = $request['params']['environment'];
             $form         = $request['body'];
 
@@ -61,10 +72,20 @@ class FormController extends Controller
             return response()->json([
                 'data'    => $response,
                 'success' => true,
-                'message' => 'Form Submitted'
+                'alert'   => [
+                    'type'  => 'success',
+                    'title' => 'Form submitted'
+                ]
             ]);
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => "Server Error: $e"]);
+            return response()->json([
+                'success' => false,
+                'alert'   => [
+                    'type'    => 'success',
+                    'title'   => 'Form submitted',
+                    'message' => "$e"
+                ]
+            ]);
         }
     }
 
