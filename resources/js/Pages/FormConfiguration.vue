@@ -23,6 +23,15 @@
                         v-model="form.configuration"
                     />
                     <Button>Get Configuration</Button>
+                    <Button
+                        type="button"
+                        :disabled="
+                            Object.keys(configuration).length ||
+                            !form.configuration
+                        "
+                        @click="handleCreateNewClick"
+                        >Create New</Button
+                    >
                 </form>
                 <div class="py-5">
                     <Vue3JsonEditor
@@ -156,10 +165,8 @@ const saveConfiguration = async (val) => {
             configurations.value[form.value.environment][
                 form.value.configuration
             ] = data.data;
-            alertStore.addAlert(alert);
-        } else {
-            alertStore.addAlert(alert);
         }
+        alertStore.addAlert(alert);
     } catch (e) {
         console.log(e.response);
     } finally {
@@ -170,5 +177,96 @@ const saveConfiguration = async (val) => {
 const fetchItemFromHistory = (environment, config) => {
     form.value.environment = environment;
     form.value.configuration = config;
+};
+
+const handleCreateNewClick = async () => {
+    try {
+        loading.value = true;
+        const { data } = await window.axios.post("/api/configuration", {
+            params: {
+                ...form.value,
+            },
+            body: {
+                configToken: form.value.configuration,
+                name: form.value.configuration.split("-").join(""),
+                siteName: "pfizerpro",
+                service: "ms-form",
+                domain: "pfizerpro.com",
+                region: "US",
+                description: "To update",
+                active: true,
+                config: {
+                    staticRequestData: {
+                        dateTime: {
+                            FuncRef: {
+                                "Conf:Func": "generate_current_time",
+                                "Conf:Arguments": ["EST", "%d-%b-%Y %H:%M:%S"],
+                            },
+                        },
+                    },
+                    fields: [
+                        {
+                            name: "submit",
+                            id: "submit",
+                            label: "Submit",
+                            type: "button",
+                            order: 0,
+                        },
+                    ],
+                    types: ["email"],
+                    email: [
+                        {
+                            cc: [],
+                            template: "AskAQuestionByEmailUSTemplateUAT",
+                            bcc: [],
+                            subject: "#{{questionId}} - New Question",
+                            templateDataMapping: {
+                                dateTime: {
+                                    FieldRef: "dateTime",
+                                },
+                                question: {
+                                    FieldRef: "question",
+                                },
+                                hcpEmail: {
+                                    FieldRef: "hcpEmail",
+                                },
+                                hcpName: {
+                                    FieldRef: "hcpName",
+                                },
+                                grvId: {
+                                    FieldRef: "grvId",
+                                },
+                                hcpZipcode: {
+                                    FieldRef: "hcpZipcode",
+                                },
+                                hcpAddress: {
+                                    FieldRef: "hcpAddress",
+                                },
+                            },
+                            replyTo: "no-reply@pfizer.com",
+                            fromText: "No reply",
+                            description: "This is description",
+                            from: "no-reply@pfizer.com",
+                            to: ["RizaHasan.Khan@pfizer.com"],
+                        },
+                    ],
+                },
+            },
+        });
+
+        const { alert, success } = data;
+
+        if (success) {
+            configurations.value[form.value.environment][
+                form.value.configuration
+            ] = data.data;
+        }
+
+        alertStore.addAlert(alert);
+    } catch {
+        // do nothing
+    } finally {
+        loading.value = false;
+    }
 };
 </script>

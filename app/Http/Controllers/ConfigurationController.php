@@ -35,6 +35,34 @@ class ConfigurationController extends Controller
         }
     }
 
+    public function createConfiguration(Request $request): JsonResponse
+    {
+        try {
+            $response = $this->defaultHttp($request['params']['configuration'])->post(
+                $this->configurationUrl($request['params']['environment'], ''),
+                $request['body']
+            )->json();
+
+            return response()->json([
+                'data'    => $response,
+                'success' => true,
+                'alert' => [
+                    'type'  => 'success',
+                    'title' => 'Configuration created'
+                ]
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'alert' => [
+                    'type'  => 'error',
+                    'title' => 'Configuration unable to be saved'
+                ],
+                'error' => "$e"
+            ]);
+        }
+    }
+
     public function updateConfiguration(Request $request): JsonResponse
     {
         try {

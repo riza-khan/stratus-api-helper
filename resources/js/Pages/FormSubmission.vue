@@ -94,12 +94,12 @@ const options = [
 
 const form = computed({
     get: () =>
-        submissions.value?.[submission.value.environment]?.[
-            submission.value.configuration
-        ],
+        submissions.value?.[submission?.value?.environment]?.[
+            submission?.value?.configuration
+        ] ?? {},
     set: (val) => {
-        submissions.value[submission.value.environment][
-            submission.value.configuration
+        submissions.value[submission?.value?.environment][
+            submission?.value?.configuration
         ] = val;
     },
 });
@@ -138,7 +138,12 @@ const getForm = async () => {
     }
 };
 
-const submitForm = async (val) => {
+const submitForm = async () => {
+    const val =
+        submissions.value[submission.value.environment][
+            submission.value.configuration
+        ];
+
     if (!Object.keys(val).length) return;
     try {
         loading.value = true;
@@ -171,6 +176,7 @@ const fetchItemFromHistory = (environment, config) => {
 };
 
 const jsonChange = (val) => {
+    if (!submissions.value[submission.value.environment]) return;
     submissions.value[submission.value.environment][
         submission.value.configuration
     ] = { ...val };

@@ -25,6 +25,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::prefix('configuration')->group(function () {
         Route::get('/', [ConfigurationController::class, 'getConfiguration'])
             ->name('get-configuration');
+        Route::post('/', [ConfigurationController::class, 'createConfiguration'])
+            ->name('create-configuration');
         Route::put('/', [ConfigurationController::class, 'updateConfiguration'])
             ->name('update-configuration');
     });
