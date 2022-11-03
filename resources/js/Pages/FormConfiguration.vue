@@ -55,14 +55,42 @@
                     :key="$environment"
                 >
                     <p class="text-center text-stone-500">{{ environment }}</p>
-                    <button
+                    <div
                         v-for="(config, $config) in configs"
                         :key="$config"
-                        @click="fetchItemFromHistory(environment, config)"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                        class="flex row gap-1"
                     >
-                        {{ config }}
-                    </button>
+                        <div class="col-8">
+                            <button
+                                @click="
+                                    fetchItemFromHistory(environment, config)
+                                "
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                            >
+                                {{ config }}
+                            </button>
+                        </div>
+                        <button
+                            v-if="environment !== 'production'"
+                            @click="upgradeConfigurationToProduction"
+                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="w-6 h-6"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5"
+                                />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
