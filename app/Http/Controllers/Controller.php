@@ -19,9 +19,10 @@ class Controller extends BaseController
         $user = Auth::user();
 
         $headers = [
-            'Accept'         => 'application/json',
-            'Authorization'  => "Bearer $user->pfizer_token",
-            'x-config-token' => $config_token
+            'Accept'               => 'application/json',
+            'Authorization'        => "Bearer $user->pfizer_token",
+            'x-config-token'       => $config_token,
+            "x-client-environment" => "preview"
         ];
 
         return Http::withHeaders($headers);
