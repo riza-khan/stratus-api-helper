@@ -93,7 +93,7 @@ const configuration = computed({
             form.value.configuration
         ] ?? {},
     set: (val) => {
-        configurations.value[form.value.environemtn][form.value.configuration] =
+        configurations.value[form.value.environment][form.value.configuration] =
             val;
     },
 });
