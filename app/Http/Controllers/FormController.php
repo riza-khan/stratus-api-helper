@@ -23,12 +23,13 @@ class FormController extends Controller
                 $obj    = $response['data'];
                 $fields = array_map(function ($field) {
                     if ($field['name'] !== 'submit') {
-                        return [$field['name'] => 'change-me'];
+                        return [$field['name'] => $field['value'] ?? 'change-me'];
                     }
                 }, $obj['fields']);
 
                 return response()->json([
                     'form'    => $this->flatten_array(['csrfToken' => $obj['csrfToken'], $fields]),
+                    'all'     => $obj,
                     'success' => true,
                     'alert'   => [
                         'type'  => 'success',
