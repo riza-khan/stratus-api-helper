@@ -58,18 +58,14 @@
                     <div
                         v-for="(config, $config) in configs"
                         :key="$config"
-                        class="flex row gap-1"
+                        class="flex gap-1"
                     >
-                        <div class="col-8">
-                            <button
-                                @click="
-                                    fetchItemFromHistory(environment, config)
-                                "
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                            >
-                                {{ config }}
-                            </button>
-                        </div>
+                        <button
+                            @click="fetchItemFromHistory(environment, config)"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                        >
+                            {{ config }}
+                        </button>
                         <button
                             v-if="environment !== 'production'"
                             @click="upgradeConfigurationToProduction"
