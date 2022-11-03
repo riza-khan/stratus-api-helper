@@ -156,13 +156,9 @@ const submitForm = async () => {
             },
         });
 
-        const { success, alert } = data;
+        const { alert } = data;
 
-        if (success) {
-            alertStore.addAlert(alert);
-        } else {
-            alertStore.addAlert(alert);
-        }
+        alertStore.addAlert(alert);
     } catch (e) {
         console.log(e);
     } finally {
