@@ -61,15 +61,20 @@
                         class="flex gap-1"
                     >
                         <button
-                            @click="fetchItemFromHistory(environment, config)"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                            @click="fetchItemFromHistory(environment, config)"
                         >
                             {{ config }}
                         </button>
                         <button
                             v-if="environment !== 'production'"
-                            @click="upgradeConfigurationToProduction"
                             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
+                            @click="
+                                upgradeConfigurationToProduction({
+                                    configuration: config,
+                                    environment,
+                                })
+                            "
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -165,7 +170,7 @@ const handleGetConfiguration = async () => {
             alertStore.addAlert(alert);
         }
     } catch (e) {
-        console.log(e);
+        alertStore.addAlert(e);
     } finally {
         loading.value = false;
     }
@@ -196,6 +201,25 @@ const saveConfiguration = async (val) => {
     } finally {
         loading.value = false;
     }
+};
+
+const upgradeConfigurationToProduction = async ({
+    configuration,
+    environment,
+}) => {
+    const targetConfig = configurations.value[environment][configuration];
+
+    const response = await window.axios.post("/api/configuration", {
+        params: {
+            environment: "production",
+            configuration,
+        },
+        body: {
+            ...targetConfig,
+        },
+    });
+
+    console.log(response);
 };
 
 const fetchItemFromHistory = (environment, config) => {
