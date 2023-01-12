@@ -211,7 +211,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { storeToRefs } from 'pinia'
+import { storeToRefs } from "pinia";
 import { useConfigStore } from "@/Store/config.js";
 import BreezeApplicationLogo from "@/Components/ApplicationLogo.vue";
 import BreezeDropdown from "@/Components/Dropdown.vue";
