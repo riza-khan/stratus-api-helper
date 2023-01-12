@@ -2,11 +2,9 @@
     <div>
         <div class="min-h-screen bg-gray-100 relative">
             <nav class="bg-white border-b border-gray-100">
-                <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex">
-                            <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('user-token')">
                                     <BreezeApplicationLogo
@@ -14,8 +12,6 @@
                                     />
                                 </Link>
                             </div>
-
-                            <!-- Navigation Links -->
                             <div
                                 class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
                             >
@@ -49,7 +45,6 @@
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
-                            <!-- Settings Dropdown -->
                             <div role="status" v-if="loading">
                                 <svg
                                     aria-hidden="true"
@@ -109,7 +104,6 @@
                             </div>
                         </div>
 
-                        <!-- Hamburger -->
                         <div class="-mr-2 flex items-center sm:hidden">
                             <button
                                 @click="
@@ -152,7 +146,6 @@
                     </div>
                 </div>
 
-                <!-- Responsive Navigation Menu -->
                 <div
                     :class="{
                         block: showingNavigationDropdown,
@@ -169,7 +162,6 @@
                         </BreezeResponsiveNavLink>
                     </div>
 
-                    <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200">
                         <div class="px-4">
                             <div class="font-medium text-base text-gray-800">
@@ -192,8 +184,6 @@
                     </div>
                 </div>
             </nav>
-
-            <!-- Page Heading -->
 
             <header class="bg-white shadow" v-if="$slots.header">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
